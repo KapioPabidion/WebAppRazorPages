@@ -5,6 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using WebAppRazorPages.Repository;
+using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore.Internal;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -53,4 +55,19 @@ app.MapRazorPages();
 
 app.MapControllers();
 
+using(var scope = app.Services.CreateScope())
+{
+    try
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        dbContext.Database.Migrate();
+    }
+
+    catch (Exception ex)
+    {
+
+    }
+
+}
+    
 app.Run();
